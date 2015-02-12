@@ -28,7 +28,7 @@
     },
     "port_state": {
       "type": "string",
-      "required": true,
+      "required": false,
       "name": "Port State",
       "description": "What state the port request is currently in",
       "enum": [

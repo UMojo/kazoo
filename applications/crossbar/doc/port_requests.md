@@ -20,6 +20,7 @@ A port request can be in one of five states:
 ## Auth Token ID: 6cf321ea39fe960d9b855786a0216064
 ## Account ID: 5b78db2f23f35aa022f5c3c0a5df1b92
 ## Port Request ID: b38b134866f87eb196c408f40ededc83
+## Friendly Name for Port Request: "My port request"
 
 ### Create an auth token on the master account
 ```
@@ -38,7 +39,7 @@ curl -v -X GET -H "X-Auth-Token: 6cf321ea39fe960d9b855786a0216064" http://thinky
 
 ### Create a new port request
 ```
-curl -v -X PUT -H "X-Auth-Token: 6cf321ea39fe960d9b855786a0216064" -H "Content-Type: application/json" http://thinky64.2600hz.com:8000/v1/accounts/5b78db2f23f35aa022f5c3c0a5df1b92/port_requests -d '{"data":{"numbers":{"+12025559000":{}}}}' | pp
+curl -v -X PUT -H "X-Auth-Token: 6cf321ea39fe960d9b855786a0216064" -H "Content-Type: application/json" http://thinky64.2600hz.com:8000/v1/accounts/5b78db2f23f35aa022f5c3c0a5df1b92/port_requests -d '{"data":{"name":,"My port request""numbers":{"+12025559000":{}}}}' | pp
 ```
 
 ### List port request details
