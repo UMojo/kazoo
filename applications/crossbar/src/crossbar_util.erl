@@ -108,6 +108,7 @@ response_400(Message, Data, Context) ->
 -spec response_402(wh_json:object(), cb_context:context()) ->
                           cb_context:context().
 response_402(Data, Context) ->
+    io:format(">>> Data = ~p\nContext = ~p\nST = ~p\n", [Data,Context,erlang:get_stacktrace()]),
     create_response('error', <<"accept charges">>, 402, Data, Context).
 
 %%--------------------------------------------------------------------
