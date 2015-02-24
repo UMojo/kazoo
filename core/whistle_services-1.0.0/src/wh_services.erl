@@ -836,21 +836,25 @@ calculate_transactions_charges(PlansCharges, Transactions) ->
 -spec calculate_transactions_charge_fold(wh_transaction:transaction(), wh_json:object()) ->
                                                 wh_json:object().
 calculate_transactions_charge_fold(Transaction, Acc) ->
-    %% This is for phone numbers as they are not setting the metadata
-    case wh_transaction:metadata(Transaction) of
-        'undefined' ->
-            Amount = wht_util:units_to_dollars(wh_transaction:amount(Transaction)),
-            Total = wh_json:get_value(<<"activation_charges">>, Acc, 0),
-            wh_json:set_value(<<"activation_charges">>, Total+Amount, Acc);
-        MetaData ->
-            Category = wh_json:get_value(<<"category">>, MetaData),
-            Class = wh_json:get_value(<<"class">>, MetaData),
-            Amount = wht_util:units_to_dollars(wh_transaction:amount(Transaction)),
-            Total = wh_json:get_value(<<"activation_charges">>, Acc, 0),
-            wh_json:set_values(
-              [{<<"activation_charges">>, Total+Amount}
-               ,{[Category, Class, <<"activation_charges">>], Amount}
-              ], Acc)
+    Amount = wht_util:units_to_dollars(wh_transaction:amount(Transaction)),
+    Total = wh_json:get_value(<<"activation_charges">>, Acc, 0),
+    io:format(">>> ActivationsCharges = ~p\n", [Total+Amount]),
+    case Total + Amount of
+        Zero when Zero == 0 ->
+            %% Works for 0.0 and 0. May compare to a threshold though…
+            Acc;
+        ActivationCharges ->
+            Values0 = [ {<<"activation_charges">>, ActivationCharges} ],
+            %% This is for phone numbers as they are not setting the metadata
+            case wh_transaction:metadata(Transaction) of
+                'undefined' ->
+                    Values = [];
+                MetaData ->
+                    Category = wh_json:get_value(<<"category">>, MetaData),
+                    Class    = wh_json:get_value(<<"class">>, MetaData),
+                    Values = [ {[Category, Class, <<"activation_charges">>], Amount} ]
+            end,
+            wh_json:set_values(Values0 ++ Values, Acc)
     end.
 
 %%--------------------------------------------------------------------
